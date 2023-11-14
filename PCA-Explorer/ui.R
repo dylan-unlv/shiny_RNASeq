@@ -2,9 +2,11 @@ library("BiocManager")
 options(repos = BiocManager::repositories())
 getOption("repos")
 library(shiny)
+library(shinythemes)
 library(plotly)
 library(DT)
 library(dplyr)
+library(tidyr)
 library(shinyjs)
 library(tibble)
 library(DESeq2)
@@ -13,8 +15,8 @@ options(shiny.maxRequestSize = 10000*1024^2)
 
 
 # Define UI
-ui <- shinyUI(navbarPage(title = "DESeq2-Shiny",
-                         
+ui <- shinyUI(navbarPage(title = "shinySeq",
+                         theme=shinytheme('flatly'),
                          
                          tabPanel(title = "Upload",
                                   sidebarLayout(
@@ -25,6 +27,9 @@ ui <- shinyUI(navbarPage(title = "DESeq2-Shiny",
                                       hr(),
                                       actionButton(inputId="example","RUN with Example Data Set "),
                                       hr(),
+                                      hr(),
+                                      fileInput("file3", label = "Previously Calculated DESeq2 object (.rds)"),
+                                      actionButton(inputId = 'load', "Load data"),
                                       textOutput("log"),
                                       
                                       # plotOutput("hist"), 
@@ -76,7 +81,8 @@ ui <- shinyUI(navbarPage(title = "DESeq2-Shiny",
                                                 sidebarPanel(
                                                   
                                                   uiOutput("numerator"),
-                                                  uiOutput("denominator"), 
+                                                  uiOutput("denominator"),
+                                                  uiOutput('contrast_v'),
                                                   plotOutput(outputId = "MAPlot"),
                                                   hr(),
                                                   # downloadButton("normcounts", "Download Normalized Counts"),
